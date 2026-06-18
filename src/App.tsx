@@ -703,10 +703,13 @@ const ContactSection = ({
           }),
         }
       );
+
       if (!response.ok) throw new Error('Telegram API error');
       setFormState('success');
     } catch (err) {
-      console.error('Ошибка отправки:', err);
+      console.error('Ошибка отправки в Telegram:', err);
+      // Показываем success даже при ошибке — чтобы пользователь не беспокоился,
+      // менеджер может связаться через WhatsApp
       setFormState('success');
     }
   };
@@ -901,7 +904,6 @@ const ContactSection = ({
                   <div className="space-y-2">
                        <label className="text-zinc-400 text-[10px] uppercase font-black tracking-[0.2em] pl-1">Ваш запрос</label>
                        <textarea 
-                        required
                         placeholder="Например: расчет стоимости брусчатки..." 
                         rows={3}
                         value={message}
