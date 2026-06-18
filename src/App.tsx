@@ -391,7 +391,7 @@ const Navbar = ({ onNavigateHome, isSubpage, onOpenPriceModal }: { onNavigateHom
 
         <div className="flex items-center gap-4 xl:gap-8">
           <div className="hidden xl:flex flex-col items-end">
-            <a href="tel:+77479003331" className={`text-sm font-black hover:text-yellow-600 transition-colors ${isSubpage || isScrolled ? 'text-zinc-900' : 'text-white'}`}>+7 (747) 900-33-31</a>
+            <a href="tel:+77479003331" onClick={() => { (window as any).dataLayer = (window as any).dataLayer || []; (window as any).dataLayer.push({ event: 'phone_click', event_category: 'lead', event_label: 'navbar' }); }} className={`text-sm font-black hover:text-yellow-600 transition-colors ${isSubpage || isScrolled ? 'text-zinc-900' : 'text-white'}`}>+7 (747) 900-33-31</a>
             <span className={`text-[9px] uppercase font-bold tracking-widest ${isSubpage || isScrolled ? 'text-zinc-400' : 'text-white/40'}`}>Алматы</span>
           </div>
           <button 
@@ -707,11 +707,17 @@ const ContactSection = ({
 
       if (!response.ok) throw new Error('Telegram API error');
       setFormState('success');
+      // GTM: конверсия — отправка формы заявки
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({ event: 'form_submit', event_category: 'lead', event_label: 'contact_form' });
     } catch (err) {
       console.error('Ошибка отправки в Telegram:', err);
       // Показываем success даже при ошибке — чтобы пользователь не беспокоился,
       // менеджер может связаться через WhatsApp
       setFormState('success');
+      // GTM: конверсия — отправка формы заявки (даже при ошибке Telegram)
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      (window as any).dataLayer.push({ event: 'form_submit', event_category: 'lead', event_label: 'contact_form' });
     }
   };
 
@@ -2775,7 +2781,7 @@ export default function App() {
                       </div>
                       <div className="flex gap-4">
                          <button 
-                           onClick={() => setIsPriceModalOpen(true)}
+                           onClick={() => { setIsPriceModalOpen(true); (window as any).dataLayer = (window as any).dataLayer || []; (window as any).dataLayer.push({ event: 'price_list_open', event_category: 'engagement', event_label: 'price_modal' }); }}
                            className="px-10 py-4 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-yellow-500 transition-all shadow-xl shadow-zinc-900/10"
                          >
                            Заказать прайс-лист
@@ -2865,6 +2871,7 @@ export default function App() {
         href="https://wa.me/77479003331" 
         target="_blank" 
         rel="noopener noreferrer"
+        onClick={() => { (window as any).dataLayer = (window as any).dataLayer || []; (window as any).dataLayer.push({ event: 'whatsapp_click', event_category: 'lead', event_label: 'floating_button' }); }}
         className="fixed bottom-8 right-8 z-50 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all animate-pulse hover:animate-none"
       >
         <MessageCircle size={28} />
