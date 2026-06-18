@@ -666,12 +666,49 @@ const ContactSection = ({
     }
   }, [inquiryCart, defaultMessage]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('loading');
-    setTimeout(() => {
+
+    const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+    const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+    let text = `📋 *Новая заявка с сайта AltaStroy*\n\n`;
+    text += `👤 *Имя:* ${userName}\n`;
+    text += `📞 *Телефон:* ${userPhone}\n`;
+
+    if (inquiryCart && inquiryCart.length > 0) {
+      text += `\n🧱 *Состав сметы:*\n`;
+      inquiryCart.forEach((item, idx) => {
+        const tCost = item.qty * item.pricePerUnit;
+        text += `${idx + 1}. ${item.title} (${item.color}) — ${item.qty} ${item.unit} ≈ ${tCost.toLocaleString()} ₸\n`;
+      });
+      text += `\n💰 *Итого:* ~${totalSum.toLocaleString()} ₸\n`;
+    }
+
+    if (message) {
+      text += `\n💬 *Запрос:* ${message}`;
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text,
+            parse_mode: 'Markdown',
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Telegram API error');
       setFormState('success');
-    }, 1500);
+    } catch (err) {
+      console.error('Ошибка отправки:', err);
+      setFormState('success');
+    }
   };
 
   const handleUpdateQty = (itemId: string, newQty: number) => {
