@@ -651,6 +651,7 @@ const ContactSection = ({
   const [message, setMessage] = useState('');
   const [userName, setUserName] = useState('');
   const [userPhone, setUserPhone] = useState('');
+  const [userComment, setUserComment] = useState('');
 
   useEffect(() => {
     if (inquiryCart && inquiryCart.length > 0) {
@@ -686,8 +687,8 @@ const ContactSection = ({
       text += `\n💰 *Итого:* ~${totalSum.toLocaleString()} ₸\n`;
     }
 
-    if (message) {
-      text += `\n💬 *Запрос:* ${message}`;
+    if (userComment) {
+      text += `\n💬 *Запрос:* ${userComment}`;
     }
 
     try {
@@ -906,8 +907,8 @@ const ContactSection = ({
                        <textarea 
                         placeholder="Например: расчет стоимости брусчатки..." 
                         rows={3}
-                        defaultValue={message}
-                        onChange={(e) => setMessage(e.target.value)}
+                        value={userComment}
+                        onChange={(e) => setUserComment(e.target.value)}
                         className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 p-5 focus:border-yellow-500 outline-none transition-colors placeholder:text-zinc-300 font-bold resize-none"
                        ></textarea>
                   </div>
