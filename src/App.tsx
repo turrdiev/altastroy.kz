@@ -906,7 +906,7 @@ const ContactSection = ({
                        <textarea 
                         placeholder="Например: расчет стоимости брусчатки..." 
                         rows={3}
-                        value={message}
+                        defaultValue={message}
                         onChange={(e) => setMessage(e.target.value)}
                         className="w-full bg-zinc-50 border border-zinc-200 text-zinc-900 p-5 focus:border-yellow-500 outline-none transition-colors placeholder:text-zinc-300 font-bold resize-none"
                        ></textarea>
